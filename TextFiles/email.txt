@@ -1,0 +1,46 @@
+//  Create Email address for each Employee
+EmployeeMail:
+LOAD 
+	EmpID AS EmployeeID,
+	IF((ord("First Name") >= 65 AND ord("First Name") <= 90), chr(ord("First Name")+32),
+		IF((Left("First Name",1)='Ä' OR Left("First Name",1)='ä'), chr(97),
+			IF((Left("First Name",1)='Å' OR Left("First Name",1)='å'), chr(97),
+				IF((Left("First Name",1)='Ö' OR Left("First Name",1)='ö'), chr(111),
+					Left("First Name",1)
+				)
+			)
+		)
+	) 
+	&
+	IF((ord("Last Name") >= 65 AND ord("Last Name") <= 90), chr(ord("Last Name")+32),
+		IF((Left("Last Name",1)='Ä' OR Left("Last Name",1)='ä'), chr(97),
+			IF((Left("Last Name",1)='Å' OR Left("Last Name",1)='å'), chr(97),
+				IF((Left("Last Name",1)='Ö' OR Left("Last Name",1)='ö'), chr(111), 
+					Left("Last Name",1)
+				)
+			)
+		)
+	) 
+	&
+	IF((ord(Right("Last Name",1)) >= 65 AND ord(Right("Last Name",1)) <= 90), chr(Right("Last Name",1))+32,
+		IF((Right("Last Name",1)='Ä' OR Left("Last Name",1)='ä'), chr(97),
+			IF((Right("Last Name",1)='Å' OR Left("Last Name",1)='å'), chr(97),
+				IF((Right("Last Name",1)='Ö' OR Left("Last Name",1)='ö'), chr(111), 
+					Right("Last Name",1)
+				)
+			)
+		)
+	)
+	& '@' & 
+	IF(OfficeID=1,'usa.com',
+		IF(OfficeID=2,'lund.se',
+			IF(OfficeID=3,'hongkong.hk',
+				IF(OfficeID=4,'nice.fr', 
+					'usa.com'
+				)
+			)
+		)
+	) as Email
+FROM [$(vPathExcel)employees.xlsx]
+(ooxml, embedded labels, table is Employees);
+

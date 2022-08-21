@@ -1,0 +1,4 @@
+SA_LINK, DivisionName
+EMEA, EMEA
+NA, North America
+SA, South America

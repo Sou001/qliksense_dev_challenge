@@ -1,0 +1,4 @@
+FOR i=0 TO NoOfTables() - 1
+	LET d = TableName(i);
+	STORE [$(d)] INTO [lib://QVDFiles/$(d).qvd];
+NEXT;

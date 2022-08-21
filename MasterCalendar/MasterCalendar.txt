@@ -1,0 +1,47 @@
+//Create the Master Calendar
+
+MasterCalendar:
+
+LOAD	
+    
+    TempDate AS OrderDate,
+    Week(TempDate) as Week,
+
+    Year(TempDate) as Year,
+    Month(TempDate) as Month,
+
+    Day(TempDate) as Day,
+
+    WeekDay(TempDate) as WeekDay,
+
+    'Q' & Ceil(Month(TempDate) / 3) as Quarter,
+
+    Week(TempDate) &'-'& If(Week(TempDate)=1 AND
+
+        Month(TempDate)=12,Year(TempDate)+1,
+
+            If(Match( Week(TempDate), 52, 53) AND
+
+                Month(TempDate)=1, Year(TempDate)-1,
+ 
+                    Year(TempDate))) AS WeekYear,
+
+    InYearToDate(TempDate, $(vToday), 0) * -1 as CYTDFlag,
+
+    InYearToDate(TempDate, $(vToday), -1) * -1 as LYTDFlag,
+
+    
+If(DayNumberOfYear(TempDate) <= DayNumberOfYear($(vToday)), 1, 0 ) as IsInYTD,
+ 
+   If(DayNumberOfQuarter(TempDate) <= DayNumberOfQuarter($(vToday)), 1, 0) as IsInQTD,
+
+    If(Day(TempDate) <= Day($(vToday)), 1, 0) as IsInMTD,
+
+    If(Month(TempDate) = Month($(vToday)), 1, 0) as IsCurrentMonth,
+
+    If(Month(AddMonths(TempDate,1)) = Month($(vToday)), 1, 0) as IsLastMonth
+
+RESIDENT CalTemp 
+
+ORDER BY TempDate ASC;
+
